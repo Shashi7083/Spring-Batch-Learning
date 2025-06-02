@@ -1,0 +1,9 @@
+# Ignore build and IDE files
+*/target/
+*/.idea/
+*/.classpath
+*/.project
+*/.settings/
+*.log
+.metadata/
+.DS_Store
