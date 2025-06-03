@@ -13,6 +13,8 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
@@ -116,11 +118,49 @@ public class BatchConfiguration {
 		
 	}
 	
+	/**
+	 * This function creates Jdbc Paging Item Reader 
+	 * @return jdbcPagingItemReader
+	 * @throws Exception 
+	 */
 	@Bean
-	public Step step1() {
+	public ItemReader<Product> jdbcPagingItemReader() {
+		
+		JdbcPagingItemReader<Product> itemReader = new JdbcPagingItemReader<>();
+		
+		//set Datasource
+		itemReader.setDataSource(dataSource);
+		
+		//Paging query provider
+		SqlPagingQueryProviderFactoryBean factory = new SqlPagingQueryProviderFactoryBean();
+		
+		//give clause in factory
+		factory.setDataSource(dataSource);
+		factory.setSelectClause("select product_id,product_name,product_category,product_price");
+		factory.setFromClause("from product_details");
+		factory.setSortKey("product_id"); //sort key should be unique
+		
+		try {
+			itemReader.setQueryProvider(factory.getObject());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//specify our row mapper
+		itemReader.setRowMapper(new ProductRowMapper());
+		
+		//specify the page size -> How many items there in a page or how many items read from database for each query run
+		itemReader.setPageSize(3); // 3 rows at a time
+		
+		return itemReader;
+	}
+	
+	@Bean
+	public Step step1()  {
 		return this.stepBuilderFactory.get("chunkBasedStep1")
 				.<Product,Product>chunk(3)
-				.reader(jdbcCursorItemReader())
+				.reader(jdbcPagingItemReader())
 				.writer(new ItemWriter<Product>() {
 
 					@Override
@@ -134,7 +174,7 @@ public class BatchConfiguration {
 	}
 	
 	@Bean
-	public Job firstJob() {
+	public Job firstJob() throws Exception  {
 		return this.jobBuilderFactory
 				.get("job1")
 				.start(step1())
