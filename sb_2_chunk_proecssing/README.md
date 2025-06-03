@@ -39,7 +39,15 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 > Screenshot of Reading data from Relational Database  configured 👇
 
-![image](https://github.com/user-attachments/assets/98da08b6-66fa-4f21-8c95-ad797951506e)
+![Jdbc Paging Item Reader](https://github.com/user-attachments/assets/98da08b6-66fa-4f21-8c95-ad797951506e)
+
+---
+
+## 📸 Output (FlatFileItemWriter)
+
+> Screenshot of output of csv created  👇
+> 
+![Flat File Item Writer](https://github.com/user-attachments/assets/08a9884a-dc42-4a7b-92ef-44e8d4f86998)
 
 ---
 
