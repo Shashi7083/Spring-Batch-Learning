@@ -16,12 +16,16 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
+import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import com.learn.domain.Product;
 import com.learn.domain.ProductFieldSetMapper;
@@ -156,20 +160,50 @@ public class BatchConfiguration {
 		return itemReader;
 	}
 	
+	/*
+	 * Item Writer
+	 */
+	
+	/**
+	 * Create Flat file item writer to write in a csv file
+	 */
+	@Bean
+	public ItemWriter<Product> flatFileItemWriter(){
+		
+		FlatFileItemWriter<Product> itemWriter = new FlatFileItemWriter<>();
+		
+		//set path 
+		itemWriter.setResource(new FileSystemResource("output/Product_Details_Output.csv"));
+		
+		//take product pojo and convert to line in csv
+		DelimitedLineAggregator<Product> lineAggregator = new DelimitedLineAggregator<Product>();
+		
+		//set delimiter
+		lineAggregator.setDelimiter(",");
+		
+		//create field extractor object BeanWrapperFieldExtractor
+		BeanWrapperFieldExtractor<Product> fieldExtractor = new BeanWrapperFieldExtractor<Product>();
+		
+		//set the field name
+		fieldExtractor.setNames(new String[] {"productId","productName","productCategory","productPrice"});
+		
+		//set fieldExtractor on lineAggregator
+		lineAggregator.setFieldExtractor(fieldExtractor);
+		
+		//set line aggregator in item writer
+		itemWriter.setLineAggregator(lineAggregator);
+		
+		return itemWriter;
+	}
+	
+	
+	
 	@Bean
 	public Step step1()  {
 		return this.stepBuilderFactory.get("chunkBasedStep1")
 				.<Product,Product>chunk(3)
 				.reader(jdbcPagingItemReader())
-				.writer(new ItemWriter<Product>() {
-
-					@Override
-					public void write(List<? extends Product> items) throws Exception {
-						System.out.println("Chunk Procession started : ");
-						items.forEach(System.out::println);
-						System.out.println("chunk ended");
-					}
-				})
+				.writer(flatFileItemWriter())
 				.build();
 	}
 	
