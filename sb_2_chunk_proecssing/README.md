@@ -19,7 +19,7 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 ---
 
-## 📸 Output (Job with Multiple Steps)
+## 📸 Output (Flat File Item Reader)
 
 > Screenshot of Flat File Item  configured 👇
 
