@@ -46,8 +46,16 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 ## 📸 Output (FlatFileItemWriter)
 
 > Screenshot of output of csv created  👇
-> 
+
 ![Flat File Item Writer](https://github.com/user-attachments/assets/08a9884a-dc42-4a7b-92ef-44e8d4f86998)
+
+---
+
+## 📸 Output (JdbcBatchItemWriter)
+
+> Screenshot of output inserted in table  👇
+
+![write in database](https://github.com/user-attachments/assets/1ab74b5c-fb63-4331-9ca5-fb9bb66f613e)
 
 ---
 
