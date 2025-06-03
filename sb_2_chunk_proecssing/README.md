@@ -30,11 +30,18 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 ## 📸 Output (JdbcCursorItemReader)
 
 > Screenshot of Reading data from Relational Database  configured 👇
-> 
+
 ![Jdbc Cursor Item Reader](https://github.com/user-attachments/assets/12ca2433-3e97-4c5c-89de-575c54289f1b)
 
 ---
 
+## 📸 Output (JdbcPagingItemReader)
+
+> Screenshot of Reading data from Relational Database  configured 👇
+
+![image](https://github.com/user-attachments/assets/98da08b6-66fa-4f21-8c95-ad797951506e)
+
+---
 
 ## 🛠 Tech Stack
 
