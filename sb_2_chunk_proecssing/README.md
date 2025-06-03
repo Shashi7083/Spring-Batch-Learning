@@ -1,4 +1,4 @@
-# 🌀 Spring Batch Learning Project
+# 🌀 Spring Batch Learning Project : Chunk Based 
 
 Welcome to my **Spring Batch Learning** project!  
 This is where I explore how batch processing works in Java using **Spring Boot and Spring Batch**.
@@ -21,27 +21,12 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 ## 📸 Output (Job with Multiple Steps)
 
-> Screenshot of my job execution with multiple steps configured 👇
+> Screenshot of Flat File Item  configured 👇
 
-![Spring Batch Output](https://github.com/user-attachments/assets/786580e9-ac5b-4fb3-8a70-71c86064e269)
-
----
-## 📸 Output (Job Restart & Prevent Restart)
-
-> Screenshot of my job execution with failing job and restart configured 👇
-![restart preventRestart](https://github.com/user-attachments/assets/ea100ff2-6a91-4cb3-9c64-0c47ad838ffc)
+![Flat File Item in Database](https://github.com/user-attachments/assets/e8c461cc-5a81-4ed4-9df5-fa0c9ba4d4d0)
 
 ---
-## 📸 Output (Conditional flow {on, to and from} )
 
-
-![conditional flow for sequential step operation](https://github.com/user-attachments/assets/98590f98-b766-46a4-9f05-909d2ab7921c)
-
----
-## 📸 Output (Conditional flow [Custom Exit Status] )
-
-> Screenshot of custom ("TEST_STATUS") CREATED 👇
-![conditional flow for sequential step operation](https://github.com/user-attachments/assets/048ef4d2-56e0-4969-823b-8470634f9f98)
 
 
 ## 🛠 Tech Stack
