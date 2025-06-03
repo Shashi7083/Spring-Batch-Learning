@@ -12,6 +12,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
@@ -29,6 +30,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.learn.domain.Product;
 import com.learn.domain.ProductFieldSetMapper;
+import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
 import com.learn.reader.ProductNameItemReader;
 
@@ -196,6 +198,28 @@ public class BatchConfiguration {
 		return itemWriter;
 	}
 	
+	/**
+	 * This method create JdbcBatchItemWriter
+	 * @return
+	 */
+	@Bean
+	public ItemWriter<Product> jdbcBatchItemWriter(){
+		
+		JdbcBatchItemWriter<Product> itemWriter = new JdbcBatchItemWriter<>();
+		
+		//set datasource
+		itemWriter.setDataSource(dataSource);
+		
+		//set sql
+		itemWriter.setSql("insert into product_details_output values(?,?,?,?)");
+		
+		//set values of preparedStatement
+		itemWriter.setItemPreparedStatementSetter(new ProductItemPreparedStatementSetter());
+		
+		return itemWriter;
+		
+	}
+	
 	
 	
 	@Bean
@@ -203,7 +227,7 @@ public class BatchConfiguration {
 		return this.stepBuilderFactory.get("chunkBasedStep1")
 				.<Product,Product>chunk(3)
 				.reader(jdbcPagingItemReader())
-				.writer(flatFileItemWriter())
+				.writer(jdbcBatchItemWriter())
 				.build();
 	}
 	
