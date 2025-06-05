@@ -1,0 +1,20 @@
+1,Smartphone,Android smartphone with 6.5-inch display,,10,14999.0
+2,Laptop,14-inch laptop with 8GB RAM and 512GB SSD,,15,49999.0
+3,Headphones,Wireless noise-cancelling headphones,,5,2999.0
+4,Smartwatch,Fitness smartwatch with heart rate monitor,,8,3999.0
+5,Keyboard,Mechanical keyboard with RGB backlight,,12,2299.0
+6,Backpack,Waterproof laptop backpack,,20,1299.0
+7,Monitor,24-inch Full HD LED monitor,,10,9999.0
+8,Power Bank,10000mAh fast-charging power bank,,7,1499.0
+9,Tablet,10-inch Android tablet with 64GB storage,,10,15999.0
+10,Webcam,1080p HD webcam with built-in microphone,,6,1999.0
+11,Mouse,Wireless ergonomic optical mouse,,5,799.0
+12,Router,High-speed dual-band Wi-Fi router,,10,2499.0
+13,Printer,All-in-one inkjet color printer,,15,6499.0
+14,Speakers,Portable Bluetooth stereo speakers,,8,1899.0
+15,External Hard Drive,1TB USB 3.0 external hard drive,,12,3899.0
+16,Desk Lamp,LED desk lamp with brightness control,,10,999.0
+17,Chair,Ergonomic office chair with lumbar support,,20,5999.0
+18,Microphone,USB condenser microphone for streaming,,7,3499.0
+19,Graphic Tablet,Drawing tablet with pressure sensitivity,,9,4999.0
+20,TV,32-inch Smart LED TV with Android OS,,11,13999.0

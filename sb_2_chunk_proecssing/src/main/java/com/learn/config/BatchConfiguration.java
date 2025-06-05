@@ -12,6 +12,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
@@ -211,10 +212,9 @@ public class BatchConfiguration {
 		itemWriter.setDataSource(dataSource);
 		
 		//set sql
-		itemWriter.setSql("insert into product_details_output values(?,?,?,?)");
+		itemWriter.setSql("insert into product_details_output values(:productId,:productName,:productCategory,:productPrice)");
 		
-		//set values of preparedStatement
-		itemWriter.setItemPreparedStatementSetter(new ProductItemPreparedStatementSetter());
+		itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Product>());
 		
 		return itemWriter;
 		
