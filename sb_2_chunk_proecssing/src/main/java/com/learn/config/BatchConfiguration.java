@@ -10,6 +10,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
@@ -29,10 +30,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
+import com.learn.domain.OSProduct;
 import com.learn.domain.Product;
 import com.learn.domain.ProductFieldSetMapper;
 import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
+import com.learn.processor.MyProductItemProcessor;
 import com.learn.reader.ProductNameItemReader;
 
 @EnableBatchProcessing
@@ -220,14 +223,41 @@ public class BatchConfiguration {
 		
 	}
 	
+	@Bean
+	public ItemWriter<OSProduct> jdbcBatchItemWriterForDifferent_IO(){
+		
+		JdbcBatchItemWriter<OSProduct> itemWriter = new JdbcBatchItemWriter<>();
+		
+		//set datasource
+		itemWriter.setDataSource(dataSource);
+		
+		//set sql
+		itemWriter.setSql("insert into os_product_details values(:productId,:productName,:productCategory,:productPrice,:taxPercent,:sku,:shippingRate)");
+		
+		itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider());
+		
+		return itemWriter;
+		
+	}
+	
+	/**
+	 * Item Processor
+	 * @return item
+	 */
+	@Bean
+	public ItemProcessor<Product, OSProduct> myProductItemProcessor(){
+		return new MyProductItemProcessor();
+	}
+	
 	
 	
 	@Bean
 	public Step step1()  {
 		return this.stepBuilderFactory.get("chunkBasedStep1")
-				.<Product,Product>chunk(3)
+				.<Product,OSProduct>chunk(3)
 				.reader(jdbcPagingItemReader())
-				.writer(jdbcBatchItemWriter())
+				.processor(myProductItemProcessor())
+				.writer(jdbcBatchItemWriterForDifferent_IO())
 				.build();
 	}
 	
