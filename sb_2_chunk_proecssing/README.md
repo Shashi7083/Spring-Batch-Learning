@@ -59,6 +59,13 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 ---
 
+## 📸 Output (Item Processor for different Input and Output)
+
+> Screenshot of output inserted in table  👇
+![Item Processor on Product and output OSProduct ](https://github.com/user-attachments/assets/c1c6f72b-1fd8-4c5f-a1ec-61c7eb0d1ad4)
+
+---
+
 ## 🛠 Tech Stack
 
 - 💻 Java 17+
