@@ -35,6 +35,7 @@ import com.learn.domain.Product;
 import com.learn.domain.ProductFieldSetMapper;
 import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
+import com.learn.processor.FilterProductItemProcessor;
 import com.learn.processor.MyProductItemProcessor;
 import com.learn.reader.ProductNameItemReader;
 
@@ -249,15 +250,23 @@ public class BatchConfiguration {
 		return new MyProductItemProcessor();
 	}
 	
+	/**
+	 * Filter Product 
+	 */
+	@Bean
+	public ItemProcessor<Product, Product> filterProductItemProcessor(){
+		return new FilterProductItemProcessor();
+	}
+	
 	
 	
 	@Bean
 	public Step step1()  {
 		return this.stepBuilderFactory.get("chunkBasedStep1")
-				.<Product,OSProduct>chunk(3)
+				.<Product,Product>chunk(3)
 				.reader(jdbcPagingItemReader())
-				.processor(myProductItemProcessor())
-				.writer(jdbcBatchItemWriterForDifferent_IO())
+				.processor(filterProductItemProcessor())
+				.writer(jdbcBatchItemWriter())
 				.build();
 	}
 	
