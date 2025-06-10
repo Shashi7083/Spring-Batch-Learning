@@ -8,6 +8,8 @@ public class FilterProductItemProcessor implements ItemProcessor<Product, Produc
 
 	@Override
 	public Product process(Product item) throws Exception {
+		
+		System.out.println("Filter Product Item Processor executed");
 		//write only those product which have price greater than 100
 		if(item.getProductPrice() > 100) {
 			return item;

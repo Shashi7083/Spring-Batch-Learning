@@ -1,12 +1,17 @@
 package com.learn.domain;
 
-
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Pattern;
 
 public class Product {
 	
 	private Integer productId;
 	private String productName;
+	
+	@Pattern(regexp = "Televisions|Tablets|Sports|Mobile Phones|Sport Accessories")
 	private String productCategory;
+	
+	@Max(100000)
 	private Integer productPrice;
 	
 	

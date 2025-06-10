@@ -8,8 +8,9 @@ import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
@@ -24,30 +25,32 @@ import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.item.validator.BeanValidatingItemProcessor;
+import org.springframework.batch.item.validator.ValidatingItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.learn.domain.OSProduct;
 import com.learn.domain.Product;
 import com.learn.domain.ProductFieldSetMapper;
 import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
+import com.learn.domain.ProductValidator;
 import com.learn.processor.FilterProductItemProcessor;
 import com.learn.processor.MyProductItemProcessor;
+import com.learn.processor.TransformProductItemProcessor;
 import com.learn.reader.ProductNameItemReader;
 
-@EnableBatchProcessing
+
 @Configuration
 public class BatchConfiguration {
 
-	@Autowired
-	private JobBuilderFactory jobBuilderFactory;
 	
-	@Autowired
-	private StepBuilderFactory stepBuilderFactory;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -258,23 +261,70 @@ public class BatchConfiguration {
 		return new FilterProductItemProcessor();
 	}
 	
-	
-	
+	/**
+	 * Create bean of Validating Item Processor that's logic written in Product Validator
+	 * @return ValidationItemProcessor 
+	 * @throws Validation Exception
+	 */
 	@Bean
-	public Step step1()  {
-		return this.stepBuilderFactory.get("chunkBasedStep1")
-				.<Product,Product>chunk(3)
-				.reader(jdbcPagingItemReader())
-				.processor(filterProductItemProcessor())
-				.writer(jdbcBatchItemWriter())
-				.build();
+	public ValidatingItemProcessor<Product> validateProductItemProcessor(){
+		ValidatingItemProcessor<Product> validatingItemProcessor = new ValidatingItemProcessor<Product>(new ProductValidator());
+		validatingItemProcessor.setFilter(true);
+		return validatingItemProcessor;
+	}
+	
+	/**
+	 * Processing or validating using bean validation Api
+	 */
+	@Bean
+	public BeanValidatingItemProcessor<Product> beanValidateItemProcessor(){
+		BeanValidatingItemProcessor<Product> BeanValidatingItemProcessor = new BeanValidatingItemProcessor<Product>();
+		BeanValidatingItemProcessor.setFilter(true);
+		return BeanValidatingItemProcessor;
 	}
 	
 	@Bean
-	public Job firstJob() throws Exception  {
-		return this.jobBuilderFactory
-				.get("job1")
-				.start(step1())
+	public ItemProcessor<Product,OSProduct> transformProductItemProcessor(){
+		return new TransformProductItemProcessor();
+	}
+	
+	/**
+	 * Composite Item Processor bean
+	 */
+	@Bean
+	public CompositeItemProcessor<Product, OSProduct> compositeItemProcessor(){
+		CompositeItemProcessor<Product, OSProduct> itemProcessor =  new CompositeItemProcessor<Product, OSProduct>();
+		
+		//create list of item processor
+		List itemProcessors = new ArrayList();
+		itemProcessors.add(validateProductItemProcessor());
+		itemProcessors.add(filterProductItemProcessor());
+		itemProcessors.add(transformProductItemProcessor());
+		
+		
+		//pass this list to composite item processor
+		itemProcessor.setDelegates(itemProcessors);
+		
+		return itemProcessor;
+	}
+	
+	
+	@Bean
+	public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager)  {
+		return new StepBuilder("chunkBasedStep1",jobRepository)
+				.<Product,OSProduct>chunk(3,transactionManager)
+				.reader(jdbcPagingItemReader())
+				.processor(compositeItemProcessor())
+				.writer(jdbcBatchItemWriterForDifferent_IO())
+				.build();
+	}
+	
+
+	
+	@Bean
+	public Job firstJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception  {
+		return new JobBuilder("job1", jobRepository)
+				.start(step1(jobRepository,transactionManager))
 				.build();
 	}
 }
