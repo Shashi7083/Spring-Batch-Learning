@@ -17,7 +17,7 @@ public class JobLaunchController {
 	private JobLauncher jobLauncher;
 	
 	@Autowired
-	@Qualifier("firstJob") //it help us specify name of the bean which we inject this is helpful when we have multiple job beans in our program
+	@Qualifier("job2") //it help us specify name of the bean which we inject this is helpful when we have multiple job beans in our program
 	private Job job;
 	
 	@GetMapping("/launchJob/{id}")
