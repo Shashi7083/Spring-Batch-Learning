@@ -43,6 +43,14 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 > Screenshot of custom ("TEST_STATUS") CREATED 👇
 ![conditional flow for sequential step operation](https://github.com/user-attachments/assets/048ef4d2-56e0-4969-823b-8470634f9f98)
 
+---
+
+## 📸 Output (Custom Logic Before and After job Execution using jobExectuionListener )
+
+> Screenshot of custom ("TEST_STATUS") CREATED 👇
+![Job Execution Listener](https://github.com/user-attachments/assets/3b5dc7b3-0fd3-40bf-a9dd-884f0029fd5a)
+
+
 
 ## 🛠 Tech Stack
 
