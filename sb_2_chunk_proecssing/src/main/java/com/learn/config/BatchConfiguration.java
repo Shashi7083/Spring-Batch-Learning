@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -41,6 +42,7 @@ import com.learn.domain.ProductFieldSetMapper;
 import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
 import com.learn.domain.ProductValidator;
+import com.learn.listener.MyChunkListener;
 import com.learn.processor.FilterProductItemProcessor;
 import com.learn.processor.MyProductItemProcessor;
 import com.learn.processor.TransformProductItemProcessor;
@@ -308,7 +310,20 @@ public class BatchConfiguration {
 		return itemProcessor;
 	}
 	
+	/**
+	 * Chunk Listener implementation
+	 */
+	@Bean
+	public MyChunkListener myChunkListener() {
+		return new MyChunkListener();
+	}
 	
+	/**
+	 * 
+	 * @param jobRepository
+	 * @param transactionManager
+	 * @return
+	 */
 	@Bean
 	public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager)  {
 		return new StepBuilder("chunkBasedStep1",jobRepository)
@@ -316,15 +331,16 @@ public class BatchConfiguration {
 				.reader(jdbcPagingItemReader())
 				.processor(compositeItemProcessor())
 				.writer(jdbcBatchItemWriterForDifferent_IO())
+				.listener(myChunkListener())
 				.build();
 	}
 	
 
 	
 	@Bean
-	public Job firstJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception  {
+	public Job firstJob(JobRepository jobRepository, Step step1) throws Exception  {
 		return new JobBuilder("job1", jobRepository)
-				.start(step1(jobRepository,transactionManager))
+				.start(step1)
 				.build();
 	}
 }
