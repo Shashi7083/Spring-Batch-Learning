@@ -43,6 +43,9 @@ import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
 import com.learn.domain.ProductValidator;
 import com.learn.listener.MyChunkListener;
+import com.learn.listener.MyItemProcessListener;
+import com.learn.listener.MyItemReadListener;
+import com.learn.listener.MyItemWriteListener;
 import com.learn.processor.FilterProductItemProcessor;
 import com.learn.processor.MyProductItemProcessor;
 import com.learn.processor.TransformProductItemProcessor;
@@ -319,6 +322,31 @@ public class BatchConfiguration {
 	}
 	
 	/**
+	 * Item Read Listener
+	 */
+	@Bean
+	public MyItemReadListener myItemReadListener() {
+		return new MyItemReadListener();
+	}
+	
+	
+	/**
+	 * Item Process Listener
+	 */
+	@Bean
+	public MyItemProcessListener myItemProcessListener() {
+		return new MyItemProcessListener();
+	}
+	
+	/**
+	 * Item write listener
+	 */
+	@Bean
+	public MyItemWriteListener myItemWriteListener() {
+		return new MyItemWriteListener();
+	}
+	
+	/**
 	 * 
 	 * @param jobRepository
 	 * @param transactionManager
@@ -332,6 +360,9 @@ public class BatchConfiguration {
 				.processor(compositeItemProcessor())
 				.writer(jdbcBatchItemWriterForDifferent_IO())
 				.listener(myChunkListener())
+				.listener(myItemReadListener())
+				.listener(myItemWriteListener())
+				.listener(myItemProcessListener())
 				.build();
 	}
 	

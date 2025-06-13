@@ -16,7 +16,7 @@ public class OSProduct extends Product{
 	public Integer getTaxPercent() {
 		return taxPercent;
 	}
-	public void setTaxPercent(Integer taxPercent) {
+	public void setTaxPercent(int taxPercent) {
 		this.taxPercent = taxPercent;
 	}
 	public String getSku() {
@@ -31,6 +31,5 @@ public class OSProduct extends Product{
 	public void setShippingRate(Integer shippingRate) {
 		this.shippingRate = shippingRate;
 	}
-	
 
 }
