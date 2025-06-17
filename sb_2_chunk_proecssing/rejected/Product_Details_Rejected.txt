@@ -1,0 +1,2 @@
+Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
+Product [productId=6, productName=Samsung Galaxy S4, productCategory=Mobile Phones, productPrice=-200]

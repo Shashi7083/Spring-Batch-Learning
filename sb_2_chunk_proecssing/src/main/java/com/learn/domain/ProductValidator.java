@@ -19,7 +19,9 @@ public class ProductValidator implements Validator<Product> {
 			throw new ValidationException("Invalid Product Category");
 		}
 		
-		if(value.getProductPrice() > 100000) {
+		
+		
+		if(value.getProductPrice() > 100000 || value.getProductPrice() < 0) {
 			throw new ValidationException("Invalide Product Price");
 		}
 		

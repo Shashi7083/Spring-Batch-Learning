@@ -46,6 +46,7 @@ import com.learn.listener.MyChunkListener;
 import com.learn.listener.MyItemProcessListener;
 import com.learn.listener.MyItemReadListener;
 import com.learn.listener.MyItemWriteListener;
+import com.learn.listener.MySkipListener;
 import com.learn.processor.FilterProductItemProcessor;
 import com.learn.processor.MyProductItemProcessor;
 import com.learn.processor.TransformProductItemProcessor;
@@ -349,6 +350,13 @@ public class BatchConfiguration {
 	}
 	
 	/**
+	 * Bean for skip listener
+	 */
+	@Bean public MySkipListener mySkipListener() {
+		return new MySkipListener();
+	}
+	
+	/**
 	 * 
 	 * @param jobRepository
 	 * @param transactionManager
@@ -365,6 +373,7 @@ public class BatchConfiguration {
 				.faultTolerant()
 				.skip(Exception.class)
 				.skipLimit(2)
+				.listener(mySkipListener())
 //				.listener(myChunkListener())
 //				.listener(myItemReadListener())
 //				.listener(myItemWriteListener())

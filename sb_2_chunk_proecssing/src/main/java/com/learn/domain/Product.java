@@ -16,7 +16,6 @@ public class Product {
 	private String productCategory;
 	
 	@Min(0)
-	@Max(100000)
 	private Integer productPrice;
 	
 	
