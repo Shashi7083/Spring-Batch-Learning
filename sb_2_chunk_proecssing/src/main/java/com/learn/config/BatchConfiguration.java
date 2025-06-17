@@ -51,6 +51,8 @@ import com.learn.processor.MyProductItemProcessor;
 import com.learn.processor.TransformProductItemProcessor;
 import com.learn.reader.ProductNameItemReader;
 
+import io.micrometer.core.instrument.config.validate.ValidationException;
+
 
 @Configuration
 public class BatchConfiguration {
@@ -274,7 +276,7 @@ public class BatchConfiguration {
 	@Bean
 	public ValidatingItemProcessor<Product> validateProductItemProcessor(){
 		ValidatingItemProcessor<Product> validatingItemProcessor = new ValidatingItemProcessor<Product>(new ProductValidator());
-		validatingItemProcessor.setFilter(true);
+//		validatingItemProcessor.setFilter(true);
 		return validatingItemProcessor;
 	}
 	
@@ -356,20 +358,24 @@ public class BatchConfiguration {
 	public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager)  {
 		return new StepBuilder("chunkBasedStep1",jobRepository)
 				.<Product,OSProduct>chunk(3,transactionManager)
-				.reader(jdbcPagingItemReader())
+//				.reader(jdbcPagingItemReader())
+				.reader(flatFileItemReader())
 				.processor(compositeItemProcessor())
 				.writer(jdbcBatchItemWriterForDifferent_IO())
-				.listener(myChunkListener())
-				.listener(myItemReadListener())
-				.listener(myItemWriteListener())
-				.listener(myItemProcessListener())
+				.faultTolerant()
+				.skip(Exception.class)
+				.skipLimit(2)
+//				.listener(myChunkListener())
+//				.listener(myItemReadListener())
+//				.listener(myItemWriteListener())
+//				.listener(myItemProcessListener())
 				.build();
 	}
 	
 
 	
 	@Bean
-	public Job firstJob(JobRepository jobRepository, Step step1) throws Exception  {
+	public Job job1(JobRepository jobRepository, Step step1) throws Exception  {
 		return new JobBuilder("job1", jobRepository)
 				.start(step1)
 				.build();

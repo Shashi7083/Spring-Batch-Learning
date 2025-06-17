@@ -1,6 +1,7 @@
 package com.learn.domain;
 
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 
 public class Product {
@@ -8,9 +9,13 @@ public class Product {
 	private Integer productId;
 	private String productName;
 	
-	@Pattern(regexp = "Televisions|Tablets|Sports|Mobile Phones|Sport Accessories")
+	/*
+	 * Not require this pattern in Skipping tutorial (39)
+	 */
+//	@Pattern(regexp = "Televisions|Tablets|Sports|Mobile Phones|Sport Accessories")
 	private String productCategory;
 	
+	@Min(0)
 	@Max(100000)
 	private Integer productPrice;
 	
