@@ -5,6 +5,7 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 ---
 
+
 ## 🚀 What I’ve Learned So Far
 
 🔹 How to create a basic **Spring Batch Job**  
@@ -18,6 +19,8 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 🔹 How the **execution flow** works using `JobInstance` and `JobExecution`
 
 ---
+
+
 
 ## 📸 Output (Flat File Item Reader)
 
@@ -66,6 +69,12 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 ---
 
+## 📸 Output (Skip Listener -> Storing invalid Records)
+
+> Screenshot of output in rejected folder  👇
+![Skip Listener](https://github.com/user-attachments/assets/1ce16b86-5fda-452d-895a-73ef28069972)
+
+---
 
 
 ## 🛠 Tech Stack
