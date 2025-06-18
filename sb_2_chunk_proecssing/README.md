@@ -76,6 +76,13 @@ This is where I explore how batch processing works in Java using **Spring Boot a
 
 ---
 
+## 📸 Output (Custom Skip Policy)
+
+> Screenshot of result of custom skip policy  👇
+![Custom Skip Policy](https://github.com/user-attachments/assets/e9dd3a94-c2f4-47a8-9349-b70e33053a2f)
+
+---
+
 
 ## 🛠 Tech Stack
 
