@@ -12,6 +12,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
@@ -22,6 +23,7 @@ import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.batch.item.file.FlatFileParseException;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
@@ -29,11 +31,13 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.batch.item.validator.BeanValidatingItemProcessor;
 import org.springframework.batch.item.validator.ValidatingItemProcessor;
+import org.springframework.batch.item.validator.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.retry.RetryException;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.learn.domain.OSProduct;
@@ -51,8 +55,10 @@ import com.learn.processor.FilterProductItemProcessor;
 import com.learn.processor.MyProductItemProcessor;
 import com.learn.processor.TransformProductItemProcessor;
 import com.learn.reader.ProductNameItemReader;
+import com.learn.skippolicy.MySkipPolicy;
 
-import io.micrometer.core.instrument.config.validate.ValidationException;
+import org.springframework.batch.item.validator.ValidationException;
+
 
 
 @Configuration
@@ -357,6 +363,14 @@ public class BatchConfiguration {
 	}
 	
 	/**
+	 * Create bean of skip policy class
+	 */
+	@Bean
+	public SkipPolicy mySkipPolicy() {
+		return new MySkipPolicy();
+	}
+	
+	/**
 	 * 
 	 * @param jobRepository
 	 * @param transactionManager
@@ -371,8 +385,10 @@ public class BatchConfiguration {
 				.processor(compositeItemProcessor())
 				.writer(jdbcBatchItemWriterForDifferent_IO())
 				.faultTolerant()
-				.skip(Exception.class)
-				.skipLimit(2)
+				.skipPolicy(mySkipPolicy())
+//				.skip(ValidationException.class)
+//				.skip(FlatFileParseException.class)
+//				.skipLimit(3)
 				.listener(mySkipListener())
 //				.listener(myChunkListener())
 //				.listener(myItemReadListener())
