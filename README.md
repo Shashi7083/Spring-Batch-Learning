@@ -23,7 +23,7 @@ It contains various projects and experiments as I explore and build batch proces
 
 ---
 
-## 📁 Upcoming
+## 📁 Learned
 
 This repo will include:
 
