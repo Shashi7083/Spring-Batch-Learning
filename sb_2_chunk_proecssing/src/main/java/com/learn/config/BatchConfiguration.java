@@ -46,6 +46,7 @@ import com.learn.domain.ProductFieldSetMapper;
 import com.learn.domain.ProductItemPreparedStatementSetter;
 import com.learn.domain.ProductRowMapper;
 import com.learn.domain.ProductValidator;
+import com.learn.exception.MyException;
 import com.learn.listener.MyChunkListener;
 import com.learn.listener.MyItemProcessListener;
 import com.learn.listener.MyItemReadListener;
@@ -311,7 +312,7 @@ public class BatchConfiguration {
 		
 		//create list of item processor
 		List itemProcessors = new ArrayList();
-		itemProcessors.add(validateProductItemProcessor());
+//		itemProcessors.add(validateProductItemProcessor());
 		itemProcessors.add(filterProductItemProcessor());
 		itemProcessors.add(transformProductItemProcessor());
 		
@@ -385,12 +386,14 @@ public class BatchConfiguration {
 				.processor(compositeItemProcessor())
 				.writer(jdbcBatchItemWriterForDifferent_IO())
 				.faultTolerant()
-				.skipPolicy(mySkipPolicy())
+				.retry(MyException.class)
+				.retryLimit(4)
+//				.skipPolicy(mySkipPolicy())
 //				.skip(ValidationException.class)
 //				.skip(FlatFileParseException.class)
 //				.skipLimit(3)
 				.listener(mySkipListener())
-//				.listener(myChunkListener())
+				.listener(myChunkListener())
 //				.listener(myItemReadListener())
 //				.listener(myItemWriteListener())
 //				.listener(myItemProcessListener())
