@@ -3,3 +3,13 @@ Product [productId=8, productName=MacBook Pro, productCategory=Laptops, productP
 Product [productId=10, productName=Nike Phantom, productCategory=Footwear, productPrice=550]
 Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
 Product [productId=6, productName=Samsung Galaxy S4, productCategory=Mobile Phones, productPrice=-200]
+Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
+2,iPad Mini,Tablets,800,
+Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
+2,iPad Mini,Tablets,
+Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
+2,iPad Mini,Tablets
+Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
+2,iPad Mini,Tablets
+Product [productId=3, productName=Canon 1500D, productCategory=Cameras, productPrice=500]
+2,iPad Mini,Tablets
